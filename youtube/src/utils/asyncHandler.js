@@ -2,20 +2,18 @@
 // const asyncHandler = (fn) => () => {}
 // const asyncHandler = (fn) => async() => {}
 
+// Wrapper to handle async errors automatically
 
-const asyncHandler = (fn) => async(req, res, next) => {
-    try {
-        await fn(req, res, next)
-    } catch (error) {
-        res.status(err.code || 500).json({
-            success: false,
-            message: err.message
-        })
-    }
-}
+const asyncHandler = (fn) => (req, res, next) => {
+  console.log("⚡ asyncHandler HIT");
 
-export {asyncHandler}
+  return Promise.resolve(fn(req, res, next)).catch((err) => {
+    console.log("❌ ERROR CAUGHT:", err.message);
+    next(err);
+  });
+};
 
+export { asyncHandler };
 
 // const asyncHandler = (requestHandler) => {
 //     return (req,res,next) => {
